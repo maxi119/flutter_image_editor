@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -93,7 +94,9 @@ class _HomePageState extends State<HomePage> {
     final config = createLocalImageConfiguration(context);
     final asset = AssetImage(R.ASSETS_ICON_PNG);
     final key = await asset.obtainKey(config);
-    final comp = asset.load(key);
+    final comp = asset.load(key, ( Uint8List bytes, {int cacheHeight, int cacheWidth } ){
+      return ui.instantiateImageCodec( bytes, targetHeight: cacheHeight, targetWidth: cacheWidth );
+    } );
     ImageStreamListener listener;
     listener = ImageStreamListener((info, flag) {
       comp.removeListener(listener);
